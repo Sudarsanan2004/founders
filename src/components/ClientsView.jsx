@@ -3,6 +3,7 @@ import { useClients, useProjects } from '../firebase/hooks';
 import { addClient, updateClient, deleteClient } from '../firebase/actions';
 import { useNotification } from '../context/NotificationContext';
 import Modal from './Modal';
+import ClientMap from './ClientMap';
 import {
     Users,
     Plus,
@@ -12,13 +13,14 @@ import {
     Phone,
     Briefcase,
     X,
-    Save
+    Save,
+    MapPin,
+    Loader2
 } from 'lucide-react';
 
 // Extracted ClientCard Component
 import BentoCard from './BentoCard';
 
-// Extracted ClientCard Component
 const ClientCard = ({ client, projectName, onEdit, onDelete }) => (
     <BentoCard>
         <div className="client-card">
@@ -47,6 +49,12 @@ const ClientCard = ({ client, projectName, onEdit, onDelete }) => (
                     <Phone size={14} className="info-icon" />
                     <span>{client.phone}</span>
                 </div>
+                {client.city && (
+                    <div className="info-row">
+                        <MapPin size={14} className="info-icon" />
+                        <span>{client.city}, {client.country}</span>
+                    </div>
+                )}
             </div>
         </div>
     </BentoCard>
@@ -59,10 +67,16 @@ const ClientsView = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingClient, setEditingClient] = useState(null);
+    const [isGeocoding, setIsGeocoding] = useState(false);
+
     const [formData, setFormData] = useState({
         name: '',
         projectId: '',
-        phone: ''
+        phone: '',
+        city: '',
+        country: '',
+        lat: '',
+        lng: ''
     });
 
     // Helper to safe get project name
@@ -75,12 +89,13 @@ const ClientsView = () => {
     // Filter clients based on search
     const filteredClients = (clients || []).filter(client =>
         (client.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (client.phone || '').includes(searchTerm)
+        (client.phone || '').includes(searchTerm) ||
+        (client.city || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const openAddModal = () => {
         setEditingClient(null);
-        setFormData({ name: '', projectId: '', phone: '' });
+        setFormData({ name: '', projectId: '', phone: '', city: '', country: '', lat: '', lng: '' });
         setIsModalOpen(true);
     };
 
@@ -89,19 +104,65 @@ const ClientsView = () => {
         setFormData({
             name: client.name || '',
             projectId: client.projectId || '',
-            phone: client.phone || ''
+            phone: client.phone || '',
+            city: client.city || '',
+            country: client.country || '',
+            lat: client.lat || '',
+            lng: client.lng || ''
         });
         setIsModalOpen(true);
+    };
+
+    const fetchCoordinates = async (city, state, country) => {
+        if (!city && !state) return null;
+        setIsGeocoding(true);
+        try {
+            // Construct query with available parts
+            const parts = [city, state, country].filter(Boolean);
+            const query = parts.join(',');
+
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            if (data && data.length > 0) {
+                return { lat: data[0].lat, lng: data[0].lon };
+            }
+        } catch (error) {
+            console.error("Geocoding failed", error);
+        } finally {
+            setIsGeocoding(false);
+        }
+        return null;
+    };
+
+    const handleCityBlur = async () => {
+        // Trigger if city OR state is present and coords are missing
+        if ((formData.city || formData.state) && !formData.lat) {
+            const coords = await fetchCoordinates(formData.city, formData.state, formData.country);
+            if (coords) {
+                setFormData(prev => ({ ...prev, lat: coords.lat, lng: coords.lng }));
+                notify(`Found location: ${[formData.city, formData.state].filter(Boolean).join(', ')}`, 'success');
+            }
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Ensure coords if missing
+            let dataToSave = { ...formData };
+            if ((!dataToSave.lat || !dataToSave.lng) && dataToSave.city) {
+                const coords = await fetchCoordinates(dataToSave.city, dataToSave.country);
+                if (coords) {
+                    dataToSave.lat = coords.lat;
+                    dataToSave.lng = coords.lng;
+                }
+            }
+
             if (editingClient) {
-                await updateClient(editingClient.id, formData);
+                await updateClient(editingClient.id, dataToSave);
                 notify('Client updated successfully', 'success');
             } else {
-                await addClient(formData);
+                await addClient(dataToSave);
                 notify('New client added successfully', 'success');
             }
             setIsModalOpen(false);
@@ -125,20 +186,30 @@ const ClientsView = () => {
     };
 
     if (clientsLoading || projectsLoading) {
-        return <div className="p-8 text-center text-white/50 animate-pulse">Loading clients...</div>;
+        return <div className="p-8 text-center text-[var(--text-muted)] animate-pulse">Loading clients...</div>;
     }
 
     return (
         <div className="view-container h-full flex flex-col">
             <div className="view-header mb-6 flex justify-between items-center">
                 <div>
-                    <h2 className="view-title text-white">Clients</h2>
-                    <p className="view-subtitle text-white/60">Manage client details and contacts</p>
+                    <h2 className="view-title">Clients</h2>
+                    <p className="view-subtitle">Manage client details and global presence</p>
                 </div>
                 <button onClick={openAddModal} className="btn btn-primary flex items-center gap-2">
                     <Plus size={18} />
                     <span>Add Client</span>
                 </button>
+            </div>
+
+            {/* Client Map Section - Neat & Small */}
+            <div className="mb-6 w-full h-[300px] flex justify-center overflow-hidden relative">
+                <div className="absolute top-3 left-4 z-10">
+                    <h3 className="text-sm font-semibold flex items-center gap-2 text-[var(--text-secondary)]">
+                        <MapPin size={14} className="text-accent-orange" /> Client Spotting
+                    </h3>
+                </div>
+                <ClientMap clients={filteredClients} width={null} height={null} />
             </div>
 
             <div className="search-container">
@@ -164,7 +235,7 @@ const ClientsView = () => {
                         />
                     ))}
                     {filteredClients.length === 0 && (
-                        <div className="col-span-full text-center py-20 opacity-50 text-white">
+                        <div className="col-span-full text-center py-20 text-[var(--text-muted)]">
                             <Users size={48} className="mx-auto mb-4 opacity-50" />
                             <p>No clients found</p>
                         </div>
@@ -205,6 +276,43 @@ const ClientsView = () => {
                         </select>
                     </div>
 
+                    <div className="grid grid-cols-3 gap-4">
+                        <div>
+                            <label className="text-label block mb-2">City</label>
+                            <input
+                                type="text"
+                                className="w-full"
+                                placeholder="e.g. Cochin"
+                                value={formData.city}
+                                onChange={e => setFormData({ ...formData, city: e.target.value })}
+                                onBlur={handleCityBlur}
+                            />
+                        </div>
+                        <div>
+                            <label className="text-label block mb-2">State</label>
+                            <input
+                                type="text"
+                                className="w-full"
+                                placeholder="e.g. Kerala"
+                                value={formData.state}
+                                onChange={e => setFormData({ ...formData, state: e.target.value })}
+                                onBlur={handleCityBlur}
+                            />
+                        </div>
+                        <div>
+                            <label className="text-label block mb-2">Country</label>
+                            <input
+                                type="text"
+                                className="w-full"
+                                placeholder="e.g. India"
+                                value={formData.country}
+                                onChange={e => setFormData({ ...formData, country: e.target.value })}
+                                onBlur={handleCityBlur}
+                            />
+                        </div>
+                    </div>
+                    {isGeocoding && <p className="text-xs text-accent-orange flex items-center gap-2"><Loader2 className="animate-spin" size={12} /> Fetching location coordinates...</p>}
+
                     <div>
                         <label className="text-label block mb-2">Phone Number</label>
                         <input
@@ -228,6 +336,7 @@ const ClientsView = () => {
                         <button
                             type="submit"
                             className="btn btn-primary flex-1 flex items-center justify-center gap-2"
+                            disabled={isGeocoding}
                         >
                             <Save size={18} />
                             {editingClient ? 'Update Client' : 'Add Client'}

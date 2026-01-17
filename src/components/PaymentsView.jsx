@@ -263,16 +263,21 @@ const PaymentsView = () => {
                         </select>
                     </div>
 
-                    <button className="btn btn-primary" onClick={() => openAddModal()}>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => openAddModal()}
+                        style={{ display: 'flex', alignItems: 'center', height: '100%' }}
+                    >
                         <Plus size={18} style={{ marginRight: '8px' }} />
                         Record Payment
                     </button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-3">
                 {projects.map(project => {
                     const projectPayments = filteredPayments.filter(p => p.projectId === project.id);
+                    // ... existing variable declarations ...
                     const allProjectPayments = payments.filter(p => p.projectId === project.id);
                     const developerCost = project.developerCost || 0;
                     const totalPaidToDev = allProjectPayments
@@ -291,6 +296,7 @@ const PaymentsView = () => {
                     return (
                         <BentoCard key={project.id} style={{ display: 'flex', flexDirection: 'column' }}>
                             <div style={{ paddingBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)', marginBottom: '16px' }}>
+                                {/* ... existing header content ... */}
                                 <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '4px' }}>
                                     {project.name}
                                 </h3>
@@ -332,7 +338,7 @@ const PaymentsView = () => {
                                 </div>
                             </div>
 
-                            <div style={{ flex: 1 }}>
+                            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                     <h4 style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
                                         History {filterPeriod === 'this-week' ? '(This Week)' : ''}
@@ -346,7 +352,18 @@ const PaymentsView = () => {
                                     </button>
                                 </div>
 
-                                <div style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <div
+                                    className="custom-scrollbar"
+                                    style={{
+                                        flex: 1,
+                                        overflowY: 'auto',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '8px',
+                                        paddingRight: '4px',
+                                        maxHeight: '200px'
+                                    }}
+                                >
                                     {sortedPayments.length === 0 ? (
                                         <p className="text-muted" style={{ fontSize: '0.8rem', fontStyle: 'italic', textAlign: 'center', padding: '10px' }}>No payments found</p>
                                     ) : (

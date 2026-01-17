@@ -42,12 +42,14 @@
     border-radius: 32px;
     display: flex;
     overflow: hidden;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Left Section */
 .login-left {
     flex: 1.1;
+    background-color: #000;
     background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../assets/bg-img.png') no-repeat center center;
     background-size: cover;
     position: relative;
@@ -80,45 +82,7 @@
     overflow: hidden;
 }
 
-.pattern-glow {
-    position: absolute;
-    bottom: -10%;
-    width: 120px;
-    height: 400px;
-    background: linear-gradient(to top, var(--accent-orange), transparent);
-    filter: blur(60px);
-    opacity: 0.4;
-    border-radius: 100px;
-}
-
-.glow-1 {
-    left: 10%;
-    animation: floatGlow 4s infinite alternate;
-}
-
-.glow-2 {
-    left: 35%;
-    animation: floatGlow 5s infinite alternate-reverse;
-    opacity: 0.3;
-}
-
-.glow-3 {
-    left: 60%;
-    animation: floatGlow 6s infinite alternate;
-    opacity: 0.5;
-}
-
-@keyframes floatGlow {
-    from {
-        transform: translateY(0);
-        opacity: 0.3;
-    }
-
-    to {
-        transform: translateY(-30px);
-        opacity: 0.6;
-    }
-}
+/* Orange Glow Removed */
 
 /* Right Section */
 .login-right {
@@ -139,7 +103,7 @@
 .brand-icon {
     width: 64px;
     height: 64px;
-    background: rgba(0, 0, 0, 0.03);
+    background: transparent;
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -186,18 +150,20 @@
 }
 
 .form-field input {
-    background: #fff;
-    border: 1px solid #e0e0e0;
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     color: #111;
     padding: 14px 16px;
     border-radius: 12px;
     font-size: 0.95rem;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .form-field input:focus {
+    background: #fff;
     border-color: var(--accent-orange);
-    box-shadow: 0 0 0 4px var(--accent-orange-soft);
+    box-shadow: 0 0 0 4px rgba(230, 126, 80, 0.15);
+    outline: none;
 }
 
 .login-btn {

@@ -10,9 +10,10 @@
   --bg-card-hover: #1f1f1f;
 
   /* Accent Colors */
-  --accent-orange: #e67e50;
-  --accent-orange-glow: rgba(230, 126, 80, 0.3);
-  --accent-orange-soft: rgba(230, 126, 80, 0.1);
+  --accent-orange: #ffffff;
+  --on-accent: #000000;
+  --accent-orange-glow: rgba(255, 255, 255, 0.3);
+  --accent-orange-soft: rgba(255, 255, 255, 0.1);
 
   /* Text Colors */
   --text-primary: #f5f5f5;
@@ -50,7 +51,10 @@
 
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
   --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.1);
-  --accent-orange-glow: rgba(230, 126, 80, 0.2);
+  --accent-orange: #000000;
+  --on-accent: #ffffff;
+  --accent-orange-glow: rgba(0, 0, 0, 0.2);
+  --accent-orange-soft: rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -100,6 +104,7 @@ body {
   transition: var(--transition-smooth);
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border-color);
 }
 
 .bento-card:hover {
@@ -214,7 +219,7 @@ body {
 
 .btn-primary {
   background: var(--accent-orange);
-  color: white;
+  color: var(--on-accent);
 }
 
 .btn-primary:hover {

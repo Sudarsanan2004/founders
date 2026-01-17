@@ -1,13 +1,25 @@
+/* Loading Screen Styles */
+.loading-screen {
+  /* Hardware acceleration for smooth animations */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
 .app {
   display: flex;
   min-height: 100vh;
   background: var(--bg-primary);
+  /* Prevent layout shift during transitions */
+  transform: translateZ(0);
 }
 
 .main-content {
   flex: 1;
   margin-left: 260px;
   min-height: 100vh;
+  /* Smooth rendering */
+  transform: translateZ(0);
 }
 
 .placeholder-view {
@@ -30,4 +42,24 @@
   .main-content {
     margin-left: 80px;
   }
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

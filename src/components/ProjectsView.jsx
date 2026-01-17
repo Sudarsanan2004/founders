@@ -4,7 +4,8 @@ import Modal from './Modal';
 import { useProjects, useEmployees } from '../firebase/hooks';
 import { addProject, updateProject, deleteProject, updateProjectStatus, updateProjectProgress } from '../firebase/actions';
 import { useNotification } from '../context/NotificationContext';
-import { Plus, Trash2, Edit2, Users, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, Edit2, Users, AlertCircle, Search } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { formatCurrency, getProfitHealth, calculateMargin } from '../utils/calculations';
 import ProjectSparkline from './Analytics/ProjectSparkline';
 
@@ -15,6 +16,11 @@ const ProjectsView = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProject, setEditingProject] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const filteredProjects = projects.filter(project =>
+        project.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const [formData, setFormData] = useState({
         name: '',
@@ -107,172 +113,201 @@ const ProjectsView = () => {
 
     return (
         <div className="view-container">
-            <div className="view-header">
+            <div className="view-header" style={{ alignItems: 'center' }}>
                 <div>
                     <h2 className="view-title">Projects</h2>
                     <p className="view-subtitle">Manage client projects and costs</p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Plus size={18} />
-                    New Project
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div style={{ position: 'relative' }}>
+                        <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                        <input
+                            type="text"
+                            placeholder="Search projects..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{
+                                paddingLeft: '40px',
+                                width: '250px',
+                                background: 'var(--bg-secondary)',
+                                fontSize: '0.875rem',
+                                border: '1px solid var(--border-color)',
+                                height: '40px'
+                            }}
+                        />
+                    </div>
+                    <button className="btn btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px' }}>
+                        <Plus size={18} />
+                        New Project
+                    </button>
+                </div>
             </div>
 
-            <div className="grid grid-cols-3">
-                {projects.map(project => {
-                    const health = getProfitHealth(Number(project.totalCost), Number(project.developerCost));
-                    const margin = calculateMargin(Number(project.totalCost), Number(project.developerCost));
+            <motion.div layout className="grid grid-cols-3">
+                <AnimatePresence>
+                    {filteredProjects.map(project => {
+                        const health = getProfitHealth(Number(project.totalCost), Number(project.developerCost));
+                        const margin = calculateMargin(Number(project.totalCost), Number(project.developerCost));
 
-                    return (
-                        <BentoCard key={project.id}>
-                            <div className="project-card-header">
-                                <h3 className="project-title">{project.name}</h3>
-                                <div style={{ position: 'relative' }}>
-                                    <select
-                                        value={project.status}
-                                        onChange={(e) => {
-                                            updateProjectStatus(project.id, e.target.value)
-                                                .then(() => notify('Status updated', 'success'))
-                                                .catch(() => notify('Error updating status', 'error'));
-                                        }}
-                                        className="status-badge"
-                                        style={{
-                                            backgroundColor: `${getStatusColor(project.status)}20`,
-                                            color: getStatusColor(project.status),
-                                            border: 'none',
-                                            cursor: 'pointer',
-                                            appearance: 'none',
-                                            paddingRight: '12px',
-                                            textAlign: 'center',
-                                            outline: 'none',
-                                            fontWeight: '500',
-                                            fontSize: '0.75rem'
-                                        }}
-                                    >
-                                        <option value="active">Active</option>
-                                        <option value="on-hold">On Hold</option>
-                                        <option value="completed">Completed</option>
-                                    </select>
-                                </div>
-                            </div>
+                        return (
+                            <motion.div
+                                layout
+                                key={project.id}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <BentoCard>
+                                    <div className="project-card-header">
+                                        <h3 className="project-title">{project.name}</h3>
+                                        <div style={{ position: 'relative' }}>
+                                            <select
+                                                value={project.status}
+                                                onChange={(e) => {
+                                                    updateProjectStatus(project.id, e.target.value)
+                                                        .then(() => notify('Status updated', 'success'))
+                                                        .catch(() => notify('Error updating status', 'error'));
+                                                }}
+                                                className="status-badge"
+                                                style={{
+                                                    backgroundColor: `${getStatusColor(project.status)}20`,
+                                                    color: getStatusColor(project.status),
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    appearance: 'none',
+                                                    paddingRight: '12px',
+                                                    textAlign: 'center',
+                                                    outline: 'none',
+                                                    fontWeight: '500',
+                                                    fontSize: '0.75rem'
+                                                }}
+                                            >
+                                                <option value="active">Active</option>
+                                                <option value="on-hold">On Hold</option>
+                                                <option value="completed">Completed</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                            {/* Manual Progress Slider */}
-                            <div style={{ marginBottom: '16px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                    <span className="text-muted" style={{ fontSize: '0.75rem' }}>Project Progress</span>
-                                    <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>{project.progress || 0}%</span>
-                                </div>
-                                <input
-                                    type="range"
-                                    className="custom-range"
-                                    min="0"
-                                    max="100"
-                                    value={project.progress || 0}
-                                    onChange={(e) => {
-                                        // Ideally debounce this, but for simplicity relying on direct update. 
-                                        // Note: React state needs to handle this. Since 'projects' comes from Firestore hook, 
-                                        // direct local mutation is laggy. We'll fire update onMouseUp to avoid write spam.
-                                        // But for visual feedback we need local state or just use onMouseUp/onTouchEnd.
-                                        // Let's use onMouseUp for the commit. onChange just to show (but wait, props are read-only-ish).
-                                        // Actually, standard pattern without local state is to just fire update.
-                                        // Let's implement a small inline debounced handler or just fire it. 
-                                        updateProjectProgress(project.id, e.target.value);
-                                    }}
-                                    style={{
-                                        background: `linear-gradient(to right, var(--accent-orange) 0%, var(--accent-orange) ${project.progress || 0}%, rgba(255,255,255,0.1) ${project.progress || 0}%, rgba(255,255,255,0.1) 100%)`
-                                    }}
-                                />
-                            </div>
+                                    {/* Manual Progress Slider */}
+                                    <div style={{ marginBottom: '16px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                            <span className="text-muted" style={{ fontSize: '0.75rem' }}>Project Progress</span>
+                                            <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>{project.progress || 0}%</span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            className="custom-range"
+                                            min="0"
+                                            max="100"
+                                            value={project.progress || 0}
+                                            onChange={(e) => {
+                                                // Ideally debounce this, but for simplicity relying on direct update. 
+                                                // Note: React state needs to handle this. Since 'projects' comes from Firestore hook, 
+                                                // direct local mutation is laggy. We'll fire update onMouseUp to avoid write spam.
+                                                // But for visual feedback we need local state or just use onMouseUp/onTouchEnd.
+                                                // Actually, standard pattern without local state is to just fire update.
+                                                // Let's implement a small inline debounced handler or just fire it. 
+                                                updateProjectProgress(project.id, e.target.value);
+                                            }}
+                                            style={{
+                                                background: `linear-gradient(to right, var(--accent-orange) 0%, var(--accent-orange) ${project.progress || 0}%, rgba(255,255,255,0.1) ${project.progress || 0}%, rgba(255,255,255,0.1) 100%)`
+                                            }}
+                                        />
+                                    </div>
 
-                            {/* Profit Health Badge */}
-                            <div style={{ marginBottom: '16px' }}>
-                                <span
-                                    style={{
-                                        display: 'inline-flex', alignItems: 'center', gap: '4px',
-                                        fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px',
-                                        background: `${health.color}15`, color: health.color, border: `1px solid ${health.color}30`
-                                    }}
-                                >
-                                    <AlertCircle size={10} />
-                                    {health.status} ({margin.toFixed(0)}%)
-                                </span>
-                            </div>
+                                    {/* Profit Health Badge */}
+                                    <div style={{ marginBottom: '16px' }}>
+                                        <span
+                                            style={{
+                                                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                                                fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px',
+                                                background: `${health.color}15`, color: health.color, border: `1px solid ${health.color}30`
+                                            }}
+                                        >
+                                            <AlertCircle size={10} />
+                                            {health.status} ({margin.toFixed(0)}%)
+                                        </span>
+                                    </div>
 
-                            <div className="project-stats" style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                <div className="stat-row">
-                                    <span className="text-muted">Project Revenue</span>
-                                    <span className="font-mono">{formatCurrency(project.totalCost)}</span>
-                                </div>
-                                <div className="stat-row">
-                                    <span className="text-muted">Dev Pay (Allocated)</span>
-                                    <span className="font-mono" style={{ color: Number(project.developerCost) === 0 ? 'var(--text-muted)' : 'inherit' }}>
-                                        {Number(project.developerCost) === 0 ? '₹0 (Direct)' : formatCurrency(project.developerCost)}
-                                    </span>
-                                </div>
-                                <div className="stat-row" style={{ marginTop: '4px', paddingTop: '4px', borderTop: '1px dotted rgba(255,255,255,0.05)' }}>
-                                    <span className="text-muted">Admin Profit</span>
-                                    <span className="font-mono" style={{ color: '#4ade80', fontWeight: '600' }}>
-                                        {formatCurrency(Number(project.totalCost) - Number(project.developerCost))}
-                                    </span>
-                                </div>
-                            </div>
+                                    <div className="project-stats" style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <div className="stat-row">
+                                            <span className="text-muted">Project Revenue</span>
+                                            <span className="font-mono">{formatCurrency(project.totalCost)}</span>
+                                        </div>
+                                        <div className="stat-row">
+                                            <span className="text-muted">Dev Pay (Allocated)</span>
+                                            <span className="font-mono" style={{ color: Number(project.developerCost) === 0 ? 'var(--text-muted)' : 'inherit' }}>
+                                                {Number(project.developerCost) === 0 ? '₹0 (Direct)' : formatCurrency(project.developerCost)}
+                                            </span>
+                                        </div>
+                                        <div className="stat-row" style={{ marginTop: '4px', paddingTop: '4px', borderTop: '1px dotted rgba(255,255,255,0.05)' }}>
+                                            <span className="text-muted">Admin Profit</span>
+                                            <span className="font-mono" style={{ color: '#4ade80', fontWeight: '600' }}>
+                                                {formatCurrency(Number(project.totalCost) - Number(project.developerCost))}
+                                            </span>
+                                        </div>
+                                    </div>
 
-                            {/* Finance Sparkline */}
-                            <div className="mb-4">
-                                <div className="flex justify-between items-end mb-1">
-                                    <span className="text-[10px] text-white/30 uppercase tracking-wider font-semibold">Spending Trend</span>
-                                </div>
-                                <ProjectSparkline projectId={project.id} color={String(health.color)} />
-                            </div>
+                                    {/* Finance Sparkline */}
+                                    <div className="mb-4">
+                                        <div className="flex justify-between items-end mb-1">
+                                            <span className="text-[10px] text-white/30 uppercase tracking-wider font-semibold">Spending Trend</span>
+                                        </div>
+                                        <ProjectSparkline projectId={project.id} color={String(health.color)} />
+                                    </div>
 
-                            {/* Assigned Employees Mini List */}
-                            <div style={{ marginBottom: '20px' }}>
-                                <p className="text-muted" style={{ fontSize: '0.75rem', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <Users size={12} /> Assigned Team
-                                </p>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                                    {project.assignedEmployees && project.assignedEmployees.length > 0 ? (
-                                        project.assignedEmployees.map(empId => {
-                                            const emp = employees.find(e => e.id === empId);
-                                            if (!emp) return null;
-                                            return (
-                                                <span key={empId} style={{ fontSize: '0.75rem', background: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: '4px' }}>
-                                                    {emp.name}
-                                                </span>
-                                            );
-                                        })
-                                    ) : (
-                                        <span className="text-muted" style={{ fontSize: '0.75rem', fontStyle: 'italic' }}>No team assigned</span>
-                                    )}
-                                </div>
-                            </div>
+                                    {/* Assigned Employees Mini List */}
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <p className="text-muted" style={{ fontSize: '0.75rem', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <Users size={12} /> Assigned Team
+                                        </p>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                                            {project.assignedEmployees && project.assignedEmployees.length > 0 ? (
+                                                project.assignedEmployees.map(empId => {
+                                                    const emp = employees.find(e => e.id === empId);
+                                                    if (!emp) return null;
+                                                    return (
+                                                        <span key={empId} style={{ fontSize: '0.75rem', background: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: '4px' }}>
+                                                            {emp.name}
+                                                        </span>
+                                                    );
+                                                })
+                                            ) : (
+                                                <span className="text-muted" style={{ fontSize: '0.75rem', fontStyle: 'italic' }}>No team assigned</span>
+                                            )}
+                                        </div>
+                                    </div>
 
-                            <div className="project-actions">
-                                <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
-                                    <button
-                                        className="icon-btn"
-                                        onClick={() => openEditModal(project)}
-                                    >
-                                        <Edit2 size={16} />
-                                    </button>
-                                    <button
-                                        className="icon-btn delete-btn"
-                                        onClick={() => {
-                                            if (confirm('Delete this project?')) {
-                                                deleteProject(project.id)
-                                                    .then(() => notify('Project deleted successfully', 'success'))
-                                                    .catch(() => notify('Error deleting project', 'error'));
-                                            }
-                                        }}
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                            </div>
-                        </BentoCard>
-                    );
-                })}
-            </div>
+                                    <div className="project-actions">
+                                        <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
+                                            <button
+                                                className="icon-btn"
+                                                onClick={() => openEditModal(project)}
+                                            >
+                                                <Edit2 size={16} />
+                                            </button>
+                                            <button
+                                                className="icon-btn delete-btn"
+                                                onClick={() => {
+                                                    if (confirm('Delete this project?')) {
+                                                        deleteProject(project.id)
+                                                            .then(() => notify('Project deleted successfully', 'success'))
+                                                            .catch(() => notify('Error deleting project', 'error'));
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </BentoCard>
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
+            </motion.div>
 
             <Modal
                 isOpen={isModalOpen}

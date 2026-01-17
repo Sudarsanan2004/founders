@@ -5,11 +5,12 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Login.css';
 
-const ERROR_MESSAGES = [
-    "Hmm… are you sure you're a founder? 😄",
-    "Founder access denied 😅 Try again.",
-    "That doesn't look right, founder 😉",
-    "Even founders mistype sometimes 😄"
+const ERROR_SEQUENCE = [
+    "Nah 😂 you’re not a founder, bitch.",
+    "Nice try 😎 But this door opens only for the real ones.",
+    "bitch 😂 this isn’t a guessing game.",
+    "Oops 😂 That’s not the magic combo.",
+    "Nah 😏 That’s not it. Try again."
 ];
 
 const Login = () => {
@@ -17,6 +18,7 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
+    const [failedAttempts, setFailedAttempts] = useState(0);
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -49,11 +51,16 @@ const Login = () => {
         setIsLoading(false);
 
         if (error) {
-            // Pick a random error message
-            const randomMessage = ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)];
-            setErrorMessage(randomMessage);
+            // Get message based on sequence index (looping)
+            const messageIndex = failedAttempts % ERROR_SEQUENCE.length;
+            const message = ERROR_SEQUENCE[messageIndex];
+
+            setErrorMessage(message);
+            setFailedAttempts(prev => prev + 1);
+
             notify(error, 'error');
         } else if (user) {
+            setFailedAttempts(0); // Reset on success
             notify('Welcome back!', 'success');
         }
     };

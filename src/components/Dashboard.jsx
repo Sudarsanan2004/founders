@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import StatCard from './StatCard';
 import AnalyticsChart from './AnalyticsChart';
 import ProfitGrowthChart from './Analytics/ProfitGrowthChart';
@@ -34,7 +35,6 @@ const Dashboard = () => {
     const adminProfit = calculateAdminProfit(projects);
 
     const activeProjects = getActiveProjectsCount(projects);
-    // ... other imports
 
     return (
         <div className="dashboard-container">
@@ -50,7 +50,13 @@ const Dashboard = () => {
                     border: '1px solid rgba(255,255,255,0.05)',
                     padding: '10px'
                 }}>
-                    <img src="/assets/logo.png" alt="Company Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    <motion.img
+                        layoutId="brand-logo"
+                        transition={{ type: "spring", stiffness: 70, damping: 18 }}
+                        src="/assets/logo.png"
+                        alt="Company Logo"
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    />
                 </div>
                 <div>
                     <h2 className="dashboard-title">Founders Dashboard</h2>
@@ -81,6 +87,9 @@ const Dashboard = () => {
                 <StatCard title="Total Revenue" value={totalRevenue} loading={loading} />
                 <StatCard title="Total Dev Pay" value={totalPayout} loading={loading} />
                 <StatCard title="Admin Profit" value={adminProfit} loading={loading} />
+
+
+
                 <ProfitGrowthChart projects={projects} loading={loading} />
 
                 {/* Main Analytics Chart (Old Version Restored with Real Data) */}

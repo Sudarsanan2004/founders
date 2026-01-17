@@ -4,7 +4,7 @@ import Modal from './Modal';
 import { useEmployees } from '../firebase/hooks';
 import { addEmployee, deleteEmployee, updateEmployee } from '../firebase/actions';
 import { useNotification } from '../context/NotificationContext';
-import { Plus, Trash2, User, Briefcase, Edit2 } from 'lucide-react';
+import { Plus, Trash2, User, Briefcase, Edit2, Crown } from 'lucide-react';
 
 const EmployeesView = () => {
     const { notify } = useNotification();
@@ -77,50 +77,74 @@ const EmployeesView = () => {
             </div>
 
             <div className="grid grid-cols-4">
-                {employees.map(employee => (
-                    <BentoCard key={employee.id}>
-                        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div style={{
-                                    width: '48px', height: '48px',
-                                    borderRadius: '50%', background: 'var(--bg-secondary)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    marginBottom: '16px', color: 'var(--accent-orange)'
-                                }}>
-                                    <User size={24} />
+                {[...employees].sort((a, b) => {
+                    const isACoFounder = a.role === 'Co-Founder' || a.role === 'co-founder';
+                    const isBCoFounder = b.role === 'Co-Founder' || b.role === 'co-founder';
+                    if (isACoFounder && !isBCoFounder) return -1;
+                    if (!isACoFounder && isBCoFounder) return 1;
+                    return 0;
+                }).map(employee => {
+                    const isCoFounder = employee.role === 'Co-Founder' || employee.role === 'co-founder';
+                    return (
+                        <BentoCard
+                            key={employee.id}
+                            className={isCoFounder ? "co-founder-card" : ""}
+                            style={isCoFounder ? {
+                                border: '1px solid var(--accent-orange)',
+                                boxShadow: '0 0 20px rgba(230, 126, 80, 0.15)',
+                                background: 'linear-gradient(145deg, var(--bg-card), rgba(230, 126, 80, 0.05))'
+                            } : {}}
+                        >
+                            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div style={{
+                                        width: '48px', height: '48px',
+                                        borderRadius: '50%',
+                                        background: isCoFounder ? 'rgba(230, 126, 80, 0.1)' : 'var(--bg-secondary)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        marginBottom: '16px',
+                                        color: isCoFounder ? 'var(--accent-orange)' : 'var(--text-secondary)'
+                                    }}>
+                                        {isCoFounder ? <Crown size={24} /> : <User size={24} />}
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '4px' }}>
+                                        <button
+                                            className="icon-btn"
+                                            onClick={() => openEditModal(employee)}
+                                        >
+                                            <Edit2 size={14} />
+                                        </button>
+                                        <button
+                                            className="icon-btn delete-btn"
+                                            onClick={() => {
+                                                if (confirm('Remove this employee?')) {
+                                                    deleteEmployee(employee.id)
+                                                        .then(() => notify('Employee removed successfully', 'success'))
+                                                        .catch(() => notify('Error removing employee', 'error'));
+                                                }
+                                            }}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
                                 </div>
-                                <div style={{ display: 'flex', gap: '4px' }}>
-                                    <button
-                                        className="icon-btn"
-                                        onClick={() => openEditModal(employee)}
-                                    >
-                                        <Edit2 size={14} />
-                                    </button>
-                                    <button
-                                        className="icon-btn delete-btn"
-                                        onClick={() => {
-                                            if (confirm('Remove this employee?')) {
-                                                deleteEmployee(employee.id)
-                                                    .then(() => notify('Employee removed successfully', 'success'))
-                                                    .catch(() => notify('Error removing employee', 'error'));
-                                            }
-                                        }}
-                                    >
-                                        <Trash2 size={14} />
-                                    </button>
-                                </div>
-                            </div>
 
-                            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '4px' }}>
-                                {employee.name}
-                            </h3>
-                            <p className="text-muted" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.875rem' }}>
-                                <Briefcase size={14} />
-                                {employee.role}
-                            </p>
-                        </div>
-                    </BentoCard>
-                ))}
+                                <h3 style={{
+                                    fontSize: '1.125rem',
+                                    fontWeight: '600',
+                                    marginBottom: '4px',
+                                    color: isCoFounder ? 'var(--text-primary)' : 'var(--text-primary)' // Could accent title if needed
+                                }}>
+                                    {employee.name}
+                                </h3>
+                                <p className="text-muted" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.875rem' }}>
+                                    <Briefcase size={14} color={isCoFounder ? 'var(--accent-orange)' : 'currentColor'} />
+                                    {employee.role}
+                                </p>
+                            </div>
+                        </BentoCard>
+                    );
+                })}
             </div>
 
             <Modal

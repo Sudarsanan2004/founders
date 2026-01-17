@@ -137,8 +137,8 @@ const AnalyticsChart = ({ projects = [], payments = [], loading = false }) => {
                                     <stop offset="100%" stopColor="#b34b00" stopOpacity={1} />
                                 </linearGradient>
                                 <linearGradient id="regularBarGradient" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="#2a2a2a" stopOpacity={1} />
-                                    <stop offset="100%" stopColor="#1a1a1a" stopOpacity={1} />
+                                    <stop offset="0%" stopColor="#ff6b00" stopOpacity={0.5} />
+                                    <stop offset="100%" stopColor="#b34b00" stopOpacity={0.5} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid vertical={false} stroke="var(--border-color)" />
@@ -146,14 +146,14 @@ const AnalyticsChart = ({ projects = [], payments = [], loading = false }) => {
                                 dataKey="name"
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: 'var(--text-secondary)', fontSize: 12 }}
+                                tick={{ fill: '#ffffff', fontSize: 12 }}
                                 dy={10}
                             />
                             <YAxis
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: 'var(--text-secondary)', fontSize: 10 }}
-                                tickFormatter={(val) => val > 0 ? `${val / 1000}k` : '0k'}
+                                tick={{ fill: '#ffffff', fontSize: 10 }}
+                                tickFormatter={(val) => val > 0 ? `${(val / 100000).toFixed(1)}L` : '0'}
                             />
                             <Tooltip
                                 content={<CustomTooltip />}
