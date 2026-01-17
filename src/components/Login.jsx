@@ -108,11 +108,16 @@ const Login = () => {
                 <motion.div
                     key="content"
                     className="login-page"
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                 >
-                    <div className="login-container">
+                    <motion.div
+                        className="login-container"
+                        initial={{ scale: 0.92, opacity: 0 }}
+                        animate={{ scale: 0.95, opacity: 1 }}
+                        transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+                    >
                         {/* Left Side: Creative Section */}
                         <div className="login-left">
                             <div className="creative-content">
@@ -190,7 +195,7 @@ const Login = () => {
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </motion.div>
             )}
         </AnimatePresence>

@@ -29,7 +29,7 @@
     grid-template-columns: 450px 1fr;
     gap: 16px;
     margin-bottom: 20px;
-    align-items: stretch;
+    align-items: start;
 }
 
 .insights-wrapper {
