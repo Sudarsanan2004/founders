@@ -141,18 +141,18 @@ const AnalyticsChart = ({ projects = [], payments = [], loading = false }) => {
                                     <stop offset="100%" stopColor="#1a1a1a" stopOpacity={1} />
                                 </linearGradient>
                             </defs>
-                            <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.03)" />
+                            <CartesianGrid vertical={false} stroke="var(--border-color)" />
                             <XAxis
                                 dataKey="name"
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                                tick={{ fill: 'var(--text-secondary)', fontSize: 12 }}
                                 dy={10}
                             />
                             <YAxis
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: 'var(--text-muted)', fontSize: 10 }}
+                                tick={{ fill: 'var(--text-secondary)', fontSize: 10 }}
                                 tickFormatter={(val) => val > 0 ? `${val / 1000}k` : '0k'}
                             />
                             <Tooltip

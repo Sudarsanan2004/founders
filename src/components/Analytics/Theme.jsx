@@ -7,8 +7,8 @@ export const ANALYTICS_THEME = {
         success: '#4ade80',
         warning: '#fbbf24',
         danger: '#f87171',
-        text: '#a0a0a0',
-        grid: 'rgba(255, 255, 255, 0.05)',
+        text: 'var(--text-secondary)',
+        grid: 'var(--border-color)',
         tooltipBg: '#1a1a1a',
         tooltipBorder: 'rgba(230, 126, 80, 0.3)' // Orange glow border
     },
