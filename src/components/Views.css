@@ -1,0 +1,390 @@
+.view-container {
+    padding: 32px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.view-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.view-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.project-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.project-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.font-mono {
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.project-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-select {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    width: auto;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.delete-btn:hover {
+    background: rgba(248, 113, 113, 0.1);
+    color: #f87171;
+}
+
+/* Payment History Items */
+.payment-history-item {
+    background: var(--bg-secondary);
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    transition: background 0.2s;
+}
+
+.payment-history-item:hover {
+    background: var(--bg-card-hover);
+}
+
+/* Client Card Styles */
+.client-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.client-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.client-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--accent-orange-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-orange);
+    box-shadow: 0 4px 12px rgba(230, 126, 80, 0.1);
+}
+
+.client-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.client-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.client-info {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+    transition: var(--transition-smooth);
+}
+
+.info-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+
+.info-icon {
+    color: var(--accent-orange);
+    opacity: 0.8;
+}
+
+/* Search Bar Polish */
+.search-container {
+    position: relative;
+    margin-bottom: 32px;
+}
+
+.search-input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 14px 16px 14px 48px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+}
+
+.search-input:focus {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-orange);
+    box-shadow: 0 0 0 4px var(--accent-orange-soft);
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+/* Filter Group Styles */
+.filter-group {
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.filter-select {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    cursor: pointer;
+    outline: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.filter-select:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.filter-select option {
+    background-color: #18181b;
+    /* Dark background for options */
+    color: #e4e4e7;
+    padding: 8px;
+}
+
+.filter-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 2px;
+}
+
+/* Kanban Board Styles */
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    height: calc(100vh - 200px);
+}
+
+.kanban-column {
+    background: var(--bg-card);
+    border-radius: var(--radius-card);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.kanban-column-header {
+    padding: 16px;
+    border-bottom: 3px solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-secondary);
+}
+
+.kanban-column-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.kanban-task-card {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.kanban-task-card:hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.kanban-task-card:active {
+    cursor: grabbing;
+}
+
+/* Responsive Kanban */
+@media (max-width: 1200px) {
+    .kanban-board {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .kanban-board {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .kanban-column {
+        max-height: 400px;
+    }
+}
+
+/* Light Mode Styles */
+[data-theme='light'] .project-stats {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .search-input {
+    background: #ffffff;
+    border: 1.5px solid rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='light'] .search-input:focus {
+    background: #ffffff;
+    border-color: var(--accent-orange);
+}
+
+[data-theme='light'] .filter-group {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .filter-select {
+    color: var(--text-secondary);
+}
+
+[data-theme='light'] .filter-select:hover {
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .filter-select option {
+    background-color: #ffffff;
+    color: #1a1a1a;
+}
+
+[data-theme='light'] .filter-divider {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .info-row {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme='light'] .info-row:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .kanban-task-card {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .icon-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .payment-history-item {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .payment-history-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.12);
+}

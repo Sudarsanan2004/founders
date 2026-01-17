@@ -1,0 +1,53 @@
+.notice-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px;
+    background: var(--accent-orange-soft);
+    border-radius: var(--radius-button);
+}
+
+.notice-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-orange);
+    color: white;
+    border-radius: 50%;
+}
+
+.marquee-wrapper {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.marquee {
+    display: flex;
+    gap: 50px;
+    animation: scroll 20s linear infinite;
+}
+
+.marquee-text {
+    white-space: nowrap;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee:hover {
+    animation-play-state: paused;
+}

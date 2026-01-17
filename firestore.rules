@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Projects
+    match /projects/{projectId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Employees
+    match /employees/{employeeId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Clients
+    match /clients/{clientId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Payments
+    match /payments/{paymentId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Notices
+    match /notices/{noticeId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Activity Log
+    match /activityLog/{logId} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}

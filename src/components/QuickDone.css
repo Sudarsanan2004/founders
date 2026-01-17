@@ -1,0 +1,232 @@
+.quick-done-container {
+    width: 100%;
+    margin-bottom: 24px;
+    position: relative;
+    font-family: 'Inter', sans-serif;
+}
+
+.quick-done-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.quick-done-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px 20px;
+    color: #e2e8f0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.quick-done-input:focus {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 165, 0, 0.5);
+    /* Accent Orange with opacity */
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.1);
+}
+
+.quick-done-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.quick-done-helper {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    padding-left: 4px;
+}
+
+.quick-done-error {
+    color: #ff4d4d;
+    font-size: 0.875rem;
+    margin-top: 8px;
+    padding-left: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Confirmation Modal Styling - Minimalist Overlay */
+.quick-done-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.quick-done-modal {
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: scaleIn 0.2s ease-out;
+}
+
+.modal-header {
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 12px;
+}
+
+.modal-details {
+    margin-bottom: 24px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+}
+
+.detail-label {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.detail-value {
+    color: #fff;
+    font-weight: 500;
+}
+
+.detail-value.highlight {
+    color: #ffa500;
+    /* Accent Orange */
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-confirm {
+    background: #ffa500;
+    border: none;
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-confirm:hover {
+    background: #ffb733;
+    transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Light Mode Styles */
+[data-theme='light'] .quick-done-input {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a202c;
+}
+
+[data-theme='light'] .quick-done-input:focus {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(230, 126, 80, 0.5);
+    box-shadow: 0 0 15px rgba(230, 126, 80, 0.1);
+}
+
+[data-theme='light'] .quick-done-input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='light'] .quick-done-helper {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='light'] .quick-done-modal {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .modal-header {
+    color: #1a202c;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .detail-label {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme='light'] .detail-value {
+    color: #1a202c;
+}
+
+[data-theme='light'] .detail-value.highlight {
+    color: #e67e50;
+}
+
+[data-theme='light'] .btn-cancel {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: #1a202c;
+}
+
+[data-theme='light'] .btn-cancel:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .btn-confirm {
+    background: #e67e50;
+}
+
+[data-theme='light'] .btn-confirm:hover {
+    background: #d96d40;
+}
