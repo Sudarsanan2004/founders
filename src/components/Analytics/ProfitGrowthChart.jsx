@@ -68,8 +68,8 @@ const ProfitGrowthChart = ({ projects, loading = false }) => {
                     </div>
                 </div>
 
-                <div style={{ height: '60px', width: '100%', marginTop: '16px' }}>
-                    <ResponsiveContainer width="100%" height="100%">
+                <div style={{ height: '60px', width: '100%', marginTop: '16px', minWidth: 0 }}>
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} debounce={50}>
                         <AreaChart data={data}>
                             <defs>
                                 <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">

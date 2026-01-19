@@ -51,8 +51,8 @@ const ActivityBarChart = () => {
                 <p className="text-xs text-white/40">Events intensity</p>
             </div>
 
-            <div className="h-[120px] w-full mt-6">
-                <ResponsiveContainer width="100%" height="100%">
+            <div className="h-[120px] w-full mt-6 min-w-0">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} debounce={50}>
                     <BarChart data={data}>
                         <Tooltip
                             cursor={{ fill: 'rgba(255,255,255,0.05)' }}

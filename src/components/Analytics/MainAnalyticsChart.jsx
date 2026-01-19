@@ -68,14 +68,14 @@ const MainAnalyticsChart = () => {
                 </div>
             </div>
 
-            <div className="h-[300px] w-full relative">
+            <div className="h-[300px] w-full relative min-w-0">
                 {data.length === 0 ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white/30">
                         <p className="text-sm font-medium">No financial data yet</p>
                         <p className="text-xs">Add payments to see trends</p>
                     </div>
                 ) : (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} debounce={50}>
                         <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                             <defs>
                                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">

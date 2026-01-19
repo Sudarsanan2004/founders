@@ -119,8 +119,8 @@ const AnalyticsChart = ({ projects = [], payments = [], loading = false }) => {
                     </div>
                 </div>
 
-                <div style={{ height: '300px', width: '100%', marginTop: '20px' }}>
-                    <ResponsiveContainer width="100%" height="100%">
+                <div style={{ height: '300px', width: '100%', marginTop: '20px', minWidth: 0 }}>
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} debounce={50}>
                         <BarChart
                             data={chartData}
                             margin={{ top: 20, right: 10, left: -20, bottom: 0 }}

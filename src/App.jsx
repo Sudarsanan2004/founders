@@ -108,7 +108,6 @@ function App() {
         ) : !loading && user ? (
           <motion.div
             key="main-app"
-            key="main-app"
             className="app"
           >
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} isOpen={isSidebarOpen} />
