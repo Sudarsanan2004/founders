@@ -1,8 +1,8 @@
-import { ChevronRight, Sun, Moon, LogOut } from 'lucide-react';
+import { ChevronRight, Sun, Moon, LogOut, Menu, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { signOutUser } from '../firebase/auth';
 
-const Header = ({ isSidebarOpen, setIsSidebarOpen }) => {
+const Header = ({ isSidebarOpen, setIsSidebarOpen, isMobile }) => {
     const { theme, toggleTheme } = useTheme();
 
     const handleLogout = async () => {
@@ -44,14 +44,19 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen }) => {
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-card)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    aria-label={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
                 >
-                    <ChevronRight
-                        size={24}
-                        style={{
-                            transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            transform: isSidebarOpen ? 'rotate(180deg)' : 'rotate(0deg)'
-                        }}
-                    />
+                    {isMobile ? (
+                        isSidebarOpen ? <X size={24} /> : <Menu size={24} />
+                    ) : (
+                        <ChevronRight
+                            size={24}
+                            style={{
+                                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                transform: isSidebarOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                            }}
+                        />
+                    )}
                 </button>
             </div>
 

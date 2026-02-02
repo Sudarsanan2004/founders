@@ -22,14 +22,16 @@ const ProjectsView = () => {
         project.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const [formData, setFormData] = useState({
+    const initialFormState = {
         name: '',
         totalCost: '',
         developerCost: '',
         status: 'active',
         assignedEmployees: [],
-        isDirectProject: false // New field for projects handled only by founders
-    });
+        isDirectProject: false
+    };
+
+    const [formData, setFormData] = useState(initialFormState);
 
     useEffect(() => {
         if (editingProject) {
@@ -39,16 +41,10 @@ const ProjectsView = () => {
                 developerCost: editingProject.developerCost,
                 status: editingProject.status,
                 assignedEmployees: editingProject.assignedEmployees || [],
-                isDirectProject: editingProject.developerCost === 0 // Auto-detect based on cost
+                isDirectProject: Number(editingProject.developerCost) === 0
             });
         } else {
-            setFormData({
-                name: '',
-                totalCost: '',
-                developerCost: '',
-                status: 'active',
-                assignedEmployees: []
-            });
+            setFormData(initialFormState);
         }
     }, [editingProject]);
 
@@ -101,7 +97,10 @@ const ProjectsView = () => {
 
     const handleClose = () => {
         setIsModalOpen(false);
-        setEditingProject(null);
+        setTimeout(() => {
+            setEditingProject(null);
+            setFormData(initialFormState);
+        }, 200); // Wait for animation
     };
 
     const openEditModal = (project) => {
@@ -136,7 +135,11 @@ const ProjectsView = () => {
                             }}
                         />
                     </div>
-                    <button className="btn btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px' }}>
+                    <button className="btn btn-primary" onClick={() => {
+                        setEditingProject(null);
+                        setFormData(initialFormState);
+                        setIsModalOpen(true);
+                    }} style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px' }}>
                         <Plus size={18} />
                         New Project
                     </button>

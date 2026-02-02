@@ -11,7 +11,7 @@ import {
 import mwuLogo from '../assets/mwu-nav-logo.png';
 import './Sidebar.css';
 
-const Sidebar = ({ activeTab, setActiveTab, isOpen }) => {
+const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen, isMobile }) => {
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { id: 'projects', label: 'Projects', icon: FolderKanban },
@@ -22,6 +22,13 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen }) => {
         { id: 'notices', label: 'Notices', icon: Bell },
         { id: 'activity', label: 'Activity Log', icon: Activity },
     ];
+
+    const handleItemClick = (id) => {
+        setActiveTab(id);
+        if (isMobile && setIsOpen) {
+            setIsOpen(false);
+        }
+    };
 
     return (
         <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
@@ -43,7 +50,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen }) => {
                         <button
                             key={item.id}
                             className={`nav-item ${isActive ? 'active' : ''}`}
-                            onClick={() => setActiveTab(item.id)}
+                            onClick={() => handleItemClick(item.id)}
                         >
                             <Icon size={20} />
                             <span>{item.label}</span>

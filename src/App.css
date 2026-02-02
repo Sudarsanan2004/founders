@@ -40,7 +40,9 @@
 
 @media (max-width: 768px) {
   .main-content {
-    margin-left: 80px;
+    margin-left: 0 !important;
+    /* Processed in JS, but ensure override */
+    width: 100% !important;
   }
 }
 

@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 9999;
     padding: 20px;
 }
 
@@ -19,6 +19,18 @@
     background: var(--bg-card);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--shadow-hover);
+    /* Prevent bento-card transitions from conflicting with Framer Motion */
+    transition: none !important;
+    /* Ensure no transform interferes with positioning */
+    transform: none !important;
+    /* Fallback centering */
+    margin: auto;
+}
+
+/* Override bento-card hover effects which shouldn't apply to a modal */
+.modal-content:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-hover) !important;
 }
 
 .modal-header {
@@ -50,6 +62,27 @@
 .close-btn:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
+}
+
+.modal-body {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: 4px;
+    /* Space for scrollbar */
+}
+
+/* Custom scrollbar for modal body */
+.modal-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
 }
 
 .form-group {

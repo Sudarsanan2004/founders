@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { DndContext, DragOverlay, closestCorners, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
@@ -20,7 +21,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     } = useSortable({ id: task.id });
 
     const style = {
-        transform: CSS.Transform.toString(transform),
+        transform: CSS.Translate.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
     };
@@ -377,15 +378,18 @@ const TasksView = () => {
                     />
                 </div>
 
-                <DragOverlay>
-                    {activeTask ? (
-                        <div className="kanban-task-card" style={{ opacity: 0.9, cursor: 'grabbing' }}>
-                            <h4 style={{ fontSize: '0.95rem', fontWeight: '600', margin: 0 }}>
-                                {activeTask.title}
-                            </h4>
-                        </div>
-                    ) : null}
-                </DragOverlay>
+                {createPortal(
+                    <DragOverlay>
+                        {activeTask ? (
+                            <div className="kanban-task-card" style={{ opacity: 0.9, cursor: 'grabbing', transform: 'rotate(2deg)' }}>
+                                <h4 style={{ fontSize: '0.95rem', fontWeight: '600', margin: 0 }}>
+                                    {activeTask.title}
+                                </h4>
+                            </div>
+                        ) : null}
+                    </DragOverlay>,
+                    document.body
+                )}
             </DndContext>
 
             <Modal

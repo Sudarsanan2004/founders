@@ -27,6 +27,26 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  // Determine if we are on mobile
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      // Auto-close sidebar when switching to mobile, or auto-open on desktop if desired
+      if (mobile) {
+        setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Save activeTab to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('activeTab', activeTab);
@@ -110,14 +130,33 @@ function App() {
             key="main-app"
             className="app"
           >
-            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} isOpen={isSidebarOpen} />
+            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} isMobile={isMobile} />
+
+            {/* Mobile Backdrop */}
+            {isMobile && isSidebarOpen && (
+              <div
+                className="sidebar-backdrop"
+                onClick={() => setIsSidebarOpen(false)}
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'rgba(0,0,0,0.5)',
+                  zIndex: 95,
+                  backdropFilter: 'blur(4px)'
+                }}
+              />
+            )}
+
             <div className="main-content" style={{
-              marginLeft: isSidebarOpen ? '260px' : '0',
+              marginLeft: isMobile ? '0' : (isSidebarOpen ? '260px' : '0'),
               transition: 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              width: isSidebarOpen ? 'calc(100% - 260px)' : '100%'
+              width: isMobile ? '100%' : (isSidebarOpen ? 'calc(100% - 260px)' : '100%')
             }}>
-              <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-              <div style={{ padding: '10px 32px 32px 32px' }}>
+              <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} isMobile={isMobile} />
+              <div style={{ padding: isMobile ? '10px 16px 32px 16px' : '10px 32px 32px 32px' }}>
                 <AnimatePresence mode="wait">
                   {activeTab === 'dashboard' && (
                     <motion.div
