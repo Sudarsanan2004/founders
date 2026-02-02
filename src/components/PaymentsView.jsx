@@ -33,6 +33,7 @@ const PaymentsView = () => {
         type: 'developer-payout',
         description: '',
         date: new Date().toISOString().split('T')[0],
+        isDateUnknown: false,
         paidBy: 'Sudarsanan',
         reason: '',
         recipientId: ''
@@ -50,6 +51,7 @@ const PaymentsView = () => {
             type: 'developer-payout',
             description: '',
             date: new Date().toISOString().split('T')[0],
+            isDateUnknown: false,
             paidBy: 'Sudarsanan',
             reason: '',
             recipientId: ''
@@ -68,6 +70,7 @@ const PaymentsView = () => {
             type: 'developer-payout',
             description: '',
             date: new Date().toISOString().split('T')[0],
+            isDateUnknown: false,
             paidBy: 'Sudarsanan',
             reason: '',
             recipientId: ''
@@ -99,6 +102,7 @@ const PaymentsView = () => {
                 type: payment.type || 'developer-payout',
                 description: payment.description || '',
                 date: dateStr,
+                isDateUnknown: payment.isDateUnknown || false,
                 paidBy: payment.paidBy || 'Sudarsanan',
                 reason: payment.reason || '',
                 recipientId: payment.recipientId || ''
@@ -160,6 +164,7 @@ const PaymentsView = () => {
             type: formData.type,
             description: formData.description,
             date: formData.date,
+            isDateUnknown: formData.isDateUnknown,
             paidBy: formData.paidBy,
             reason: formData.reason,
             recipientId: formData.recipientId
@@ -393,7 +398,7 @@ const PaymentsView = () => {
                                                             )}
                                                             <p style={{ fontSize: '0.85rem', fontWeight: '500' }}>{p.description}</p>
                                                             <p className="text-muted" style={{ fontSize: '0.7rem', display: 'flex', gap: '6px' }}>
-                                                                <span>{formatDate(p.createdAt)}</span>
+                                                                <span>{p.isDateUnknown ? 'No Date' : formatDate(p.createdAt)}</span>
                                                                 <span>•</span>
                                                                 <span style={{ color: p.paidBy === 'Sudarsanan' ? '#60a5fa' : '#c084fc' }}>{p.paidBy}</span>
                                                             </p>
@@ -596,13 +601,24 @@ const PaymentsView = () => {
                             </div>
 
                             <div className="form-group">
-                                <label className="form-label">Date</label>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <label className="form-label" style={{ marginBottom: 0 }}>Date</label>
+                                    <label style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.isDateUnknown}
+                                            onChange={e => setFormData({ ...formData, isDateUnknown: e.target.checked })}
+                                        />
+                                        Unknown Date
+                                    </label>
+                                </div>
                                 <input
                                     type="date"
-                                    required
+                                    required={!formData.isDateUnknown}
+                                    disabled={formData.isDateUnknown}
                                     value={formData.date}
                                     onChange={e => setFormData({ ...formData, date: e.target.value })}
-                                    style={{ width: '100%' }}
+                                    style={{ width: '100%', opacity: formData.isDateUnknown ? 0.5 : 1 }}
                                 />
                             </div>
 
