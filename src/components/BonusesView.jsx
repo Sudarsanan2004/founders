@@ -129,7 +129,8 @@ const BonusesView = () => {
                             minHeight: '220px', // Ensure consistent height
                             border: '1px solid rgba(255,255,255,0.05)',
                             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                            overflow: 'hidden'
+                            overflow: 'hidden',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                         }}>
                             {/* Gradient Background Decoration */}
                             <div style={{
@@ -154,8 +155,8 @@ const BonusesView = () => {
                                         <Gift size={20} color="var(--accent-orange)" />
                                     </div>
                                     <div>
-                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Paid To</p>
-                                        <p style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-primary)' }}>{bonus.employeeName}</p>
+                                        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Paid To</p>
+                                        <p style={{ fontWeight: '700', fontSize: '0.95rem', color: '#ffffff' }}>{bonus.employeeName}</p>
                                     </div>
                                 </div>
                                 <button
@@ -165,7 +166,8 @@ const BonusesView = () => {
                                     style={{
                                         background: 'rgba(255,255,255,0.03)',
                                         border: '1px solid rgba(255,255,255,0.05)',
-                                        width: '28px', height: '28px'
+                                        width: '28px', height: '28px',
+                                        color: 'rgba(255,255,255,0.7)'
                                     }}
                                 >
                                     <Trash2 size={14} />
@@ -174,8 +176,8 @@ const BonusesView = () => {
 
                             {/* Main Amount Area */}
                             <div style={{ marginBottom: 'auto', padding: '10px 0' }}>
-                                <p style={{ fontSize: '2.2rem', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.03em', lineHeight: '1', display: 'flex', alignItems: 'flex-start' }}>
-                                    <span style={{ fontSize: '1.2rem', marginTop: '6px', color: 'var(--text-muted)', marginRight: '4px', fontWeight: '500' }}>₹</span>
+                                <p style={{ fontSize: '2.2rem', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.03em', lineHeight: '1', display: 'flex', alignItems: 'flex-start' }}>
+                                    <span style={{ fontSize: '1.2rem', marginTop: '6px', color: 'rgba(255,255,255,0.5)', marginRight: '4px', fontWeight: '500' }}>₹</span>
                                     {Number(bonus.amount).toLocaleString('en-IN')}
                                 </p>
                             </div>
@@ -191,12 +193,12 @@ const BonusesView = () => {
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                     <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-orange)' }}></div>
-                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '500' }}>{formatDate(bonus.createdAt)}</span>
+                                    <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', fontWeight: '500' }}>{formatDate(bonus.createdAt)}</span>
                                 </div>
 
                                 <p style={{
                                     fontSize: '0.8rem',
-                                    color: 'var(--text-muted)',
+                                    color: 'rgba(255,255,255,0.5)',
                                     fontStyle: bonus.note ? 'normal' : 'italic',
                                     maxWidth: '120px',
                                     whiteSpace: 'nowrap',
