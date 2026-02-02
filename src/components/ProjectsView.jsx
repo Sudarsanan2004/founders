@@ -48,6 +48,18 @@ const ProjectsView = () => {
         }
     }, [editingProject]);
 
+    // Auto-fix: Ensure all completed projects have 100% progress
+    useEffect(() => {
+        if (!projectsLoading && projects.length > 0) {
+            projects.forEach(project => {
+                if (project.status === 'completed' && project.progress !== 100) {
+                    // console.log(`Auto-fixing progress for completed project: ${project.name}`);
+                    updateProjectProgress(project.id, 100);
+                }
+            });
+        }
+    }, [projects, projectsLoading]);
+
     const toggleEmployeeAssignment = (employeeId) => {
         setFormData(prev => {
             const current = prev.assignedEmployees || [];
@@ -76,7 +88,8 @@ const ProjectsView = () => {
                 totalCost: Number(formData.totalCost),
                 developerCost: Number(formData.developerCost),
                 status: formData.status,
-                assignedEmployees: formData.assignedEmployees
+                assignedEmployees: formData.assignedEmployees,
+                progress: formData.status === 'completed' ? 100 : (editingProject?.progress || 0)
             };
 
             if (editingProject) {
@@ -168,8 +181,14 @@ const ProjectsView = () => {
                                             <select
                                                 value={project.status}
                                                 onChange={(e) => {
-                                                    updateProjectStatus(project.id, e.target.value)
-                                                        .then(() => notify('Status updated', 'success'))
+                                                    const newStatus = e.target.value;
+                                                    updateProjectStatus(project.id, newStatus)
+                                                        .then(() => {
+                                                            if (newStatus === 'completed') {
+                                                                updateProjectProgress(project.id, 100);
+                                                            }
+                                                            notify('Status updated', 'success');
+                                                        })
                                                         .catch(() => notify('Error updating status', 'error'));
                                                 }}
                                                 className="status-badge"
