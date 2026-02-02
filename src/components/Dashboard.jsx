@@ -9,7 +9,7 @@ import NoticeMarquee from './NoticeMarquee';
 import TaskMarquee from './TaskMarquee';
 import SmartInsights from './SmartInsights';
 import QuickDone from './QuickDone';
-import { useProjects, usePayments, useActivityLog, useNotices } from '../firebase/hooks';
+import { useProjects, usePayments, useActivityLog, useNotices, useBonuses } from '../firebase/hooks';
 import {
     calculateTotalRevenue,
     calculateTotalDevBudget,
@@ -23,16 +23,19 @@ const Dashboard = () => {
     const { payments, loading: paymentsLoading } = usePayments();
     const { activities, loading: activitiesLoading } = useActivityLog();
     const { notices, loading: noticesLoading } = useNotices();
+    const { bonuses, loading: bonusesLoading } = useBonuses();
 
-    const loading = projectsLoading || paymentsLoading;
+    const loading = projectsLoading || paymentsLoading || bonusesLoading;
+
+    const totalBonuses = bonuses.reduce((sum, b) => sum + (Number(b.amount) || 0), 0);
 
     // New definitions:
     // Total Project Value = Sum of all project contracts
     const totalRevenue = calculateTotalRevenue(projects);
-    // Total Dev Pay = Sum of all allocated developer costs
-    const totalPayout = calculateTotalDevBudget(projects);
-    // Admin Profit = Total Cost - Total Allocated Dev Cost
-    const adminProfit = calculateAdminProfit(projects);
+    // Total Dev Pay = Sum of all allocated developer costs + Bonuses
+    const totalPayout = calculateTotalDevBudget(projects) + totalBonuses;
+    // Admin Profit = Total Cost - Total Allocated Dev Cost - Bonuses
+    const adminProfit = calculateAdminProfit(projects) - totalBonuses;
 
     const activeProjects = getActiveProjectsCount(projects);
 

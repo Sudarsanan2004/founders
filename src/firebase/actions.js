@@ -304,3 +304,34 @@ export const deleteTask = async (taskId) => {
     }
 };
 
+// Add new bonus
+export const addBonus = async (bonusData) => {
+    try {
+        const docRef = await addDoc(collection(db, 'bonuses'), {
+            ...bonusData,
+            createdAt: bonusData.date ? new Date(bonusData.date) : serverTimestamp()
+        });
+
+        await addDoc(collection(db, 'activityLog'), {
+            action: 'bonus_paid',
+            description: `Bonus of ₹${bonusData.amount} paid to ${bonusData.employeeName}`,
+            timestamp: serverTimestamp()
+        });
+
+        return docRef.id;
+    } catch (error) {
+        console.error('Error adding bonus:', error);
+        throw error;
+    }
+};
+
+// Delete bonus
+export const deleteBonus = async (bonusId) => {
+    try {
+        await deleteDoc(doc(db, 'bonuses', bonusId));
+    } catch (error) {
+        console.error('Error deleting bonus:', error);
+        throw error;
+    }
+};
+

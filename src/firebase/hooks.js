@@ -178,6 +178,32 @@ export const useClients = () => {
     return { clients, loading };
 };
 
+// Hook to get real-time bonuses
+export const useBonuses = () => {
+    const [bonuses, setBonuses] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const q = query(collection(db, 'bonuses'), orderBy('createdAt', 'desc'));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const bonusesData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setBonuses(bonusesData);
+            setLoading(false);
+        }, (error) => {
+            console.error('Error fetching bonuses:', error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    return { bonuses, loading };
+};
+
 // Hook to get real-time tasks
 export const useTasks = () => {
     const [tasks, setTasks] = useState([]);

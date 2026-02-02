@@ -6,7 +6,8 @@ import {
     Bell,
     Activity,
     Contact,
-    CheckSquare
+    CheckSquare,
+    Gift
 } from 'lucide-react';
 import mwuLogo from '../assets/mwu-nav-logo.png';
 import './Sidebar.css';
@@ -18,6 +19,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen, isMobile }) => {
         { id: 'employees', label: 'Employees', icon: Users },
         { id: 'clients', label: 'Clients', icon: Contact },
         { id: 'payments', label: 'Payments', icon: CreditCard },
+        { id: 'bonuses', label: 'Bonuses', icon: Gift },
         { id: 'tasks', label: 'Tasks', icon: CheckSquare },
         { id: 'notices', label: 'Notices', icon: Bell },
         { id: 'activity', label: 'Activity Log', icon: Activity },

@@ -12,6 +12,7 @@ import PaymentsView from './components/PaymentsView';
 import ClientsView from './components/ClientsView';
 import ActivityLogView from './components/ActivityLogView';
 import TasksView from './components/TasksView';
+import BonusesView from './components/BonusesView';
 import Login from './components/Login';
 import './App.css';
 import './components/Views.css';
@@ -233,6 +234,17 @@ function App() {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
                       <TasksView />
+                    </motion.div>
+                  )}
+                  {activeTab === 'bonuses' && (
+                    <motion.div
+                      key="bonuses"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                      <BonusesView />
                     </motion.div>
                   )}
                   {activeTab === 'activity' && (

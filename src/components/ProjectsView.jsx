@@ -159,7 +159,7 @@ const ProjectsView = () => {
                 </div>
             </div>
 
-            <motion.div layout className="grid grid-cols-3">
+            <motion.div layout className="grid grid-cols-4">
                 <AnimatePresence>
                     {filteredProjects.map(project => {
                         const health = getProfitHealth(Number(project.totalCost), Number(project.developerCost));
@@ -173,8 +173,9 @@ const ProjectsView = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 transition={{ duration: 0.2 }}
+                                style={{ height: '100%' }} // Ensure height is full
                             >
-                                <BentoCard>
+                                <BentoCard style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '20px' }}>
                                     <div className="project-card-header">
                                         <h3 className="project-title">{project.name}</h3>
                                         <div style={{ position: 'relative' }}>
@@ -225,12 +226,6 @@ const ProjectsView = () => {
                                             max="100"
                                             value={project.progress || 0}
                                             onChange={(e) => {
-                                                // Ideally debounce this, but for simplicity relying on direct update. 
-                                                // Note: React state needs to handle this. Since 'projects' comes from Firestore hook, 
-                                                // direct local mutation is laggy. We'll fire update onMouseUp to avoid write spam.
-                                                // But for visual feedback we need local state or just use onMouseUp/onTouchEnd.
-                                                // Actually, standard pattern without local state is to just fire update.
-                                                // Let's implement a small inline debounced handler or just fire it. 
                                                 updateProjectProgress(project.id, e.target.value);
                                             }}
                                             style={{
@@ -281,7 +276,8 @@ const ProjectsView = () => {
                                     </div>
 
                                     {/* Assigned Employees Mini List */}
-                                    <div style={{ marginBottom: '20px' }}>
+                                    {/* Use margin-bottom: auto to push footer down if this section is short */}
+                                    <div style={{ marginBottom: 'auto' }}>
                                         <p className="text-muted" style={{ fontSize: '0.75rem', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                             <Users size={12} /> Assigned Team
                                         </p>
@@ -302,7 +298,7 @@ const ProjectsView = () => {
                                         </div>
                                     </div>
 
-                                    <div className="project-actions">
+                                    <div className="project-actions" style={{ marginTop: '20px' }}>
                                         <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
                                             <button
                                                 className="icon-btn"
