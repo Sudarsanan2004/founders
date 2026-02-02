@@ -560,18 +560,26 @@ const PaymentsView = () => {
 
                             <div className="form-group">
                                 <label className="form-label">Project</label>
-                                <select
-                                    required
-                                    value={formData.projectId}
-                                    onChange={e => setFormData({ ...formData, projectId: e.target.value })}
-                                    style={{ width: '100%' }}
-                                    disabled={!!editingPayment && !preselectedProjectId}
-                                >
-                                    <option value="">Select Project</option>
-                                    {projects.map(p => (
-                                        <option key={p.id} value={p.id}>{p.name}</option>
-                                    ))}
-                                </select>
+                                {!!preselectedProjectId || !!editingPayment ? (
+                                    <input
+                                        type="text"
+                                        disabled
+                                        value={projects.find(p => p.id === formData.projectId)?.name || ''}
+                                        style={{ width: '100%', background: 'rgba(255,255,255,0.05)', cursor: 'not-allowed', color: 'var(--text-muted)' }}
+                                    />
+                                ) : (
+                                    <select
+                                        required
+                                        value={formData.projectId}
+                                        onChange={e => setFormData({ ...formData, projectId: e.target.value })}
+                                        style={{ width: '100%' }}
+                                    >
+                                        <option value="">Select Project</option>
+                                        {projects.map(p => (
+                                            <option key={p.id} value={p.id}>{p.name}</option>
+                                        ))}
+                                    </select>
+                                )}
                             </div>
 
                             <div className="form-group">
@@ -600,7 +608,6 @@ const PaymentsView = () => {
                                 <label className="form-label">Description</label>
                                 <input
                                     type="text"
-                                    required
                                     value={formData.description}
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
                                     style={{ width: '100%' }}
