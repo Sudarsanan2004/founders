@@ -589,6 +589,8 @@ const PaymentsView = () => {
                                     required
                                     value={formData.amount}
                                     onChange={e => setFormData({ ...formData, amount: e.target.value })}
+                                    inputMode="numeric"
+                                    onWheel={(e) => e.target.blur()}
                                     style={{ width: '100%' }}
                                 />
                             </div>
