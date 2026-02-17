@@ -28,21 +28,42 @@ const ProfitGrowthChart = ({ projects, loading = false }) => {
         });
     }, [projects]);
 
-    const currentMonthGrowth = useMemo(() => {
-        if (data.length < 2) return 0;
-        const lastValue = data[data.length - 1].value;
-        // Simple growth metric: % increase from first project in list to now
-        // Or strictly "This Month"? User asked for "this month growth".
-        // Let's try to filter data for this month.
+    const { growth, isPositive } = useMemo(() => {
+        if (!projects || projects.length === 0) return { growth: 0, isPositive: true };
+
         const now = new Date();
-        const thisMonthData = data.filter(d => {
-            // We stored 'date' string in 'date' prop, hard to parse back accurately without keeping original object
-            // Let's just use the full dataset for the sparkline, and calculate a simple "Recent" trend
-            return true;
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        const prevDate = new Date();
+        prevDate.setMonth(currentMonth - 1);
+        const prevMonth = prevDate.getMonth();
+        const prevYear = prevDate.getFullYear();
+
+        let currentProfit = 0;
+        let prevProfit = 0;
+
+        projects.forEach(p => {
+            const date = p.createdAt?.toDate ? p.createdAt.toDate() : new Date(p.createdAt);
+            const profit = (Number(p.totalCost) || 0) - (Number(p.developerCost) || 0);
+
+            if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                currentProfit += profit;
+            } else if (date.getMonth() === prevMonth && date.getFullYear() === prevYear) {
+                prevProfit += profit;
+            }
         });
-        // Let's just return a fixed positive indicator for now as "Growth" implies positive trend usually
-        return 12.5; // Placeholder or calculate real logic if needed
-    }, [data]);
+
+        if (prevProfit === 0) {
+            return { growth: currentProfit > 0 ? 100 : 0, isPositive: true };
+        }
+
+        const percentChange = ((currentProfit - prevProfit) / prevProfit) * 100;
+        return {
+            growth: Math.abs(percentChange).toFixed(1),
+            isPositive: percentChange >= 0
+        };
+    }, [projects]);
 
     if (loading) {
         return (
@@ -58,12 +79,18 @@ const ProfitGrowthChart = ({ projects, loading = false }) => {
                 <div>
                     <h3 className="text-label" style={{ marginBottom: '4px' }}>Profit Trend</h3>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '1.5rem', fontWeight: '700', color: '#4ade80' }}>
-                            + 15%
+                        <span style={{ fontSize: '1.5rem', fontWeight: '700', color: isPositive ? '#4ade80' : '#f87171' }}>
+                            {isPositive ? '+' : '-'} {growth}%
                         </span>
-                        <div style={{ display: 'flex', alignItems: 'center', color: '#4ade80', fontSize: '0.75rem', background: 'rgba(74, 222, 128, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>
-                            <TrendingUp size={12} style={{ marginRight: '4px' }} />
-                            <span>This Month</span>
+                        <div style={{
+                            display: 'flex', alignItems: 'center',
+                            color: isPositive ? '#4ade80' : '#f87171',
+                            fontSize: '0.75rem',
+                            background: isPositive ? 'rgba(74, 222, 128, 0.1)' : 'rgba(248, 113, 113, 0.1)',
+                            padding: '2px 6px', borderRadius: '4px'
+                        }}>
+                            <TrendingUp size={12} style={{ marginRight: '4px', transform: isPositive ? 'none' : 'scaleY(-1)' }} />
+                            <span>vs Last Month</span>
                         </div>
                     </div>
                 </div>

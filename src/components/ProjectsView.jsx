@@ -130,7 +130,7 @@ const ProjectsView = () => {
                     <h2 className="view-title">Projects</h2>
                     <p className="view-subtitle">Manage client projects and costs</p>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div className="view-header-actions">
                     <div style={{ position: 'relative' }}>
                         <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                         <input
@@ -144,16 +144,20 @@ const ProjectsView = () => {
                                 background: 'var(--bg-secondary)',
                                 fontSize: '0.875rem',
                                 border: '1px solid var(--border-color)',
-                                height: '40px'
+                                borderRadius: '8px',
+                                // Height handled by CSS class
                             }}
                         />
                     </div>
-                    <button className="btn btn-primary" onClick={() => {
-                        setEditingProject(null);
-                        setFormData(initialFormState);
-                        setIsModalOpen(true);
-                    }} style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px' }}>
-                        <Plus size={18} />
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                            setEditingProject(null);
+                            setFormData(initialFormState);
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        <Plus size={18} style={{ marginRight: '8px' }} />
                         New Project
                     </button>
                 </div>

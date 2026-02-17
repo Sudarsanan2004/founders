@@ -81,16 +81,87 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .bento-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
 
     .dashboard-container {
-        padding: 16px;
+        padding: 16px 12px;
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
     }
 
     .dashboard-title {
         font-size: 1.5rem;
+    }
+
+    .insights-task-container {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .insights-wrapper {
+        min-width: 100%;
+        /* Full width on mobile */
+    }
+
+    .task-marquee-wrapper {
+        height: auto;
+        min-height: 120px;
+        /* Ensure visibility */
+    }
+
+    /* Adjust header for mobile */
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+
+    /* Stacking Effect for Bottom Cards */
+    /* By default, bento-grid is 1fr auto-fit. We need explicit stacking context. */
+
+
+    /* Target specific children if possible, or just all for the effect */
+    /* We'll use nth-last-child to target the bottom ones specifically if order is known, 
+       or just applying sticky to the container wrappers if they exist. 
+       React renders them as direct children of .bento-grid */
+
+    .bento-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        /* Space between cards */
+    }
+
+    /* Make the last few cards sticky */
+    .bento-grid>div:nth-last-child(1),
+    /* ActivityLog */
+    .bento-grid>div:nth-last-child(2)
+
+    /* ProjectFinance */
+        {
+        position: sticky;
+        top: 80px;
+        /* Stick below header */
+        box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1);
+        /* Shadow to separate from card behind */
+    }
+
+    /* Distinct top offsets causing a 'stack' look */
+    .bento-grid>div:nth-last-child(2) {
+        top: 80px;
+        z-index: 5;
+    }
+
+    .bento-grid>div:nth-last-child(1) {
+        top: 100px;
+        /* Slightly lower to show it's on top/stacking */
+        z-index: 10;
+        margin-bottom: 40px;
+        /* Bottom spacing */
     }
 }

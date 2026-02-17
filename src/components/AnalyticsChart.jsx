@@ -21,42 +21,61 @@ const AnalyticsChart = ({ projects = [], payments = [], loading = false }) => {
 
         const processedData = {};
         const now = new Date();
-        const currentYear = now.getFullYear();
+        const oneYearAgo = new Date();
+        oneYearAgo.setMonth(now.getMonth() - 11); // Go back 11 months + current = 12 months
+        oneYearAgo.setDate(1); // Start of that month
 
-        // 1. Process Projects for "Cashflow" (Total value of project contracts)
         projects.forEach(prj => {
             const date = prj.createdAt?.toDate ? prj.createdAt.toDate() : new Date(prj.createdAt);
             if (isNaN(date.getTime())) return;
 
-            // Only show data for current year for monthly view
-            if (timeframe === 'monthly' && date.getFullYear() !== currentYear) return;
+            // Monthly View: Show last 12 months
+            if (timeframe === 'monthly' && date < oneYearAgo) return;
 
             let key;
+            let displayLabel;
+
             if (timeframe === 'monthly') {
-                key = date.toLocaleDateString('en-IN', { month: 'short' });
+                // Key needs to be unique for Month+Year to sort correctly, but we display Month
+                // Ideally we want "Jan", "Feb". But if spanning years, "Jan" (25) and "Jan" (26) conflict.
+                // Let's use "MMM YY" as key/name for clarity if spanning years. 
+                // However, user might prefer just "Jan" if implied. 
+                // Let's use specific formatting:
+                key = date.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' }); // "Jan 25"
+                displayLabel = date.toLocaleDateString('en-IN', { month: 'short' });
             } else {
                 key = date.getFullYear().toString();
+                displayLabel = key;
             }
 
             if (!processedData[key]) {
-                processedData[key] = { name: key, value: 0, inflow: 0, date: date };
+                processedData[key] = {
+                    name: key,
+                    shortName: displayLabel,
+                    value: 0,
+                    inflow: 0,
+                    date: date, // Keep one date instance for sorting
+                    year: date.getFullYear()
+                };
             }
             processedData[key].value += Number(prj.totalCost) || 0;
-            // Inflow here represents the "Net Admin Profit" part (Cost - DevBudget)
             processedData[key].inflow += (Number(prj.totalCost) - Number(prj.developerCost)) || 0;
         });
 
-        let sorted = Object.values(processedData).sort((a, b) => a.date - b.date);
+        // Convert to array and Sort
+        let sorted = Object.values(processedData).sort((a, b) => {
+            // Sort by actual date for monthly, year for yearly
+            if (timeframe === 'monthly') {
+                // Approximate sort by year-month
+                return a.date - b.date;
+            } else {
+                return Number(a.name) - Number(b.name);
+            }
+        });
 
-        // Fill in missing months for monthly view
-        if (timeframe === 'monthly') {
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const fullData = months.map(m => {
-                const existing = sorted.find(d => d.name === m);
-                return existing || { name: m, value: 0, inflow: 0 };
-            });
-            sorted = fullData;
-        }
+        // Fill gaps? 
+        // For rolling 12 months, removing gaps is okay, or fill them.
+        // Let's just return actual data for now to ensure 2025 entries appear.
 
         return sorted;
     }, [projects, timeframe, loading]);
@@ -71,7 +90,7 @@ const AnalyticsChart = ({ projects = [], payments = [], loading = false }) => {
             return (
                 <div className="bar-tooltip">
                     <p className="tooltip-date">
-                        {timeframe === 'monthly' ? `${data.name} 2026` : data.name}
+                        {data.name}
                     </p>
                     <div className="tooltip-row">
                         <span className="tooltip-label">Cashflow</span>

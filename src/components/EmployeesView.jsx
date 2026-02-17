@@ -70,10 +70,12 @@ const EmployeesView = () => {
                     <h2 className="view-title">Employees</h2>
                     <p className="view-subtitle">Manage team members</p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Plus size={18} />
-                    Add Employee
-                </button>
+                <div className="view-header-actions">
+                    <button className="btn btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Plus size={18} />
+                        Add Employee
+                    </button>
+                </div>
             </div>
 
             <div className="grid grid-cols-4">

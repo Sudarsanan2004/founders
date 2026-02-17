@@ -5,6 +5,12 @@
     font-family: 'Inter', sans-serif;
 }
 
+@media (max-width: 1024px) {
+    .quick-done-container {
+        display: none;
+    }
+}
+
 .quick-done-input-wrapper {
     position: relative;
     width: 100%;

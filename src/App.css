@@ -16,7 +16,7 @@
 
 .main-content {
   flex: 1;
-  margin-left: 260px;
+  /* margin-left handled by flex/sticky layout */
   min-height: 100vh;
   /* Smooth rendering */
   transform: translateZ(0);
@@ -40,8 +40,6 @@
 
 @media (max-width: 768px) {
   .main-content {
-    margin-left: 0 !important;
-    /* Processed in JS, but ensure override */
     width: 100% !important;
   }
 }

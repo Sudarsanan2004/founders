@@ -4,6 +4,28 @@
     margin: 0 auto;
 }
 
+@media (max-width: 1024px) {
+    .view-container {
+        padding: 16px 12px;
+    }
+
+    .view-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .view-title {
+        font-size: 1.5rem;
+    }
+
+    /* Allow horizontal scroll for tables/kanban if needed */
+    .kanban-board {
+        overflow-x: auto;
+        padding-bottom: 20px;
+    }
+}
+
 .view-header {
     display: flex;
     justify-content: space-between;
@@ -20,6 +42,61 @@
 .view-subtitle {
     color: var(--text-secondary);
     font-size: 0.875rem;
+}
+
+/* Standardized Actions Container */
+.view-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Enforce consistent height */
+.view-header-actions>*,
+.view-header-actions .btn,
+.view-header-actions .filter-group,
+.view-header-actions input,
+.view-header-actions select {
+    height: 40px !important;
+    display: flex;
+    align-items: center;
+}
+
+.view-header-actions .btn {
+    white-space: nowrap;
+    padding: 0 16px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .view-header-actions {
+        width: 100%;
+        flex-direction: column;
+        /* Stack items nicely */
+        gap: 12px;
+    }
+
+    .view-header-actions>* {
+        width: 100%;
+        /* Full width for better touch targets */
+        justify-content: center;
+    }
+
+    /* Make search inputs full width too */
+    .view-header-actions input {
+        width: 100% !important;
+    }
+
+    .view-header-actions .filter-group {
+        justify-content: space-between;
+        /* Spread filters out */
+        width: 100%;
+    }
+
+    .view-header-actions .filter-select {
+        flex: 1;
+        text-align: center;
+    }
 }
 
 .project-card-header {
@@ -317,12 +394,40 @@
 
 @media (max-width: 768px) {
     .kanban-board {
-        grid-template-columns: 1fr;
-        height: auto;
+        display: flex;
+        /* Horizontal layout */
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 12px;
+        /* Tighter gap */
+        padding-bottom: 24px;
+        /* Space for scrollbar */
+        height: calc(100vh - 240px);
+        /* Fixed height to allow scrolling content within columns */
+        grid-template-columns: none;
+        /* Remove grid */
+        /* Smooth scrolling */
+        -webkit-overflow-scrolling: touch;
+        scroll-padding-left: 12px;
+        /* Offset for snap */
+        padding-left: 12px;
+        padding-right: 12px;
     }
 
     .kanban-column {
-        max-height: 400px;
+        min-width: 80vw;
+        /* Show 80% so next column peeks through (better visibility) */
+        scroll-snap-align: center;
+        max-height: 100%;
+        /* Fill container */
+        border-right: 1px solid rgba(255, 255, 255, 0.02);
+        /* Visual separation */
+    }
+
+    .kanban-column-content {
+        padding-bottom: 80px;
+        /* Extra padding for bottom fabrication */
     }
 }
 

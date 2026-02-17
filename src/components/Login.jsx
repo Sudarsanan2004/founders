@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { signInUser } from '../firebase/auth';
 import { useNotification } from '../context/NotificationContext';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Login.css';
 
@@ -23,6 +23,7 @@ const Login = () => {
         email: '',
         password: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -158,13 +159,23 @@ const Login = () => {
 
                                     <div className="form-field">
                                         <label>Password</label>
-                                        <input
-                                            type="password"
-                                            required
-                                            placeholder="Private login key"
-                                            value={formData.password}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                        />
+                                        <div className="password-input-wrapper">
+                                            <input
+                                                type={showPassword ? "text" : "password"}
+                                                required
+                                                placeholder="Private login key"
+                                                value={formData.password}
+                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="password-toggle-btn"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                tabIndex="-1"
+                                            >
+                                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <button type="submit" className="login-btn" disabled={isLoading}>

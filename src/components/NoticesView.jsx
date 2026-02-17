@@ -57,10 +57,12 @@ const NoticesView = () => {
                     <h2 className="view-title">Notices & Announcements</h2>
                     <p className="view-subtitle">Broadcast messages to the team</p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Plus size={18} />
-                    Post Notice
-                </button>
+                <div className="view-header-actions">
+                    <button className="btn btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Plus size={18} />
+                        Post Notice
+                    </button>
+                </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

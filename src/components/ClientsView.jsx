@@ -196,10 +196,12 @@ const ClientsView = () => {
                     <h2 className="view-title">Clients</h2>
                     <p className="view-subtitle">Manage client details and global presence</p>
                 </div>
-                <button onClick={openAddModal} className="btn btn-primary flex items-center gap-2">
-                    <Plus size={18} />
-                    <span>Add Client</span>
-                </button>
+                <div className="view-header-actions">
+                    <button onClick={openAddModal} className="btn btn-primary flex items-center gap-2">
+                        <Plus size={18} />
+                        <span>Add Client</span>
+                    </button>
+                </div>
             </div>
 
             {/* Client Map Section - Neat & Small */}

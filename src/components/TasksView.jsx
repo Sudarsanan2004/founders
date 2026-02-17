@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { DndContext, DragOverlay, closestCorners, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { DndContext, DragOverlay, closestCorners, PointerSensor, TouchSensor, KeyboardSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Modal from './Modal';
@@ -209,17 +209,27 @@ const TasksView = () => {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        assignedTo: 'Sudarsanan',
+        assignedTo: 'Sudarsanan', // Default column
         priority: 'medium',
         dueDate: '',
         createdBy: 'Sudarsanan'
     });
 
+    // Optimized sensors for mobile (Touch with delay) and desktop (Pointer)
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 8,
+                distance: 8, // Requires 8px movement to start drag (prevents accidental clicks)
             },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250, // Press and hold for 250ms to pick up (allows scrolling otherwise)
+                tolerance: 5, // Movement tolerance during delay
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
         })
     );
 

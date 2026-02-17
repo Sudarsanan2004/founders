@@ -26,15 +26,15 @@ function App() {
   });
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
 
   // Determine if we are on mobile
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth <= 768;
+      const mobile = window.innerWidth <= 1024; // Increased breakpoint for "zoomed out" mobile views
       setIsMobile(mobile);
       // Auto-close sidebar when switching to mobile, or auto-open on desktop if desired
       if (mobile) {
@@ -59,7 +59,7 @@ function App() {
       setTimeout(() => {
         setUser(currentUser);
         setLoading(false);
-      }, 800);
+      }, 300);
     });
     return () => unsubscribe();
   }, []);
@@ -89,7 +89,7 @@ function App() {
               key="loader-bg"
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 position: 'absolute',
                 inset: 0,
@@ -100,17 +100,37 @@ function App() {
             />
 
             {/* Logo Layer - Morphs to Dashboard */}
-            {/* Only exit if NOT going to dashboard (e.g. login) */}
-            <motion.img
-              layoutId="brand-logo"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={isDashboard ? undefined : { opacity: 0, scale: 0.9, transition: { duration: 0.4 } }}
-              transition={{ type: "spring", stiffness: 70, damping: 18 }}
-              src="/assets/logo.png"
-              alt="Loading..."
-              style={{ width: '100px', height: 'auto', zIndex: 10, willChange: 'transform' }}
-            />
+            <motion.div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 20, /* Increased Z to be above */
+                pointerEvents: 'none'
+              }}
+              // Remove exit fade if morphing. Only fade out if NOT dashboard (unlikely in this flow, but safe)
+              exit={isDashboard ? undefined : { opacity: 0 }}
+            >
+              <motion.img
+                layoutId="brand-logo"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                // Crucial: No exit animation when isDashboard is true. 
+                // Let Framer Motion handle the layoutId morph seamlessly.
+                exit={isDashboard ? { opacity: 1 } : { opacity: 0, scale: 0.9 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 80,
+                  damping: 15,
+                  mass: 1
+                }}
+                src="/assets/logo.png"
+                alt="Loading..."
+                style={{ width: '100px', height: 'auto' }}
+              />
+            </motion.div>
           </motion.div>
         )}
 
@@ -152,9 +172,9 @@ function App() {
             )}
 
             <div className="main-content" style={{
-              marginLeft: isMobile ? '0' : (isSidebarOpen ? '260px' : '0'),
-              transition: 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              width: isMobile ? '100%' : (isSidebarOpen ? 'calc(100% - 260px)' : '100%')
+              /* Flexbox handles the layout now given the sticky sidebar */
+              width: '100%',
+              transition: 'background 0.3s',
             }}>
               <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} isMobile={isMobile} />
               <div style={{ padding: isMobile ? '10px 16px 32px 16px' : '10px 32px 32px 32px' }}>

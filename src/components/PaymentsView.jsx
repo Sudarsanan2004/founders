@@ -246,7 +246,7 @@ const PaymentsView = () => {
                     <p className="view-subtitle">Track payouts and balances</p>
                 </div>
 
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div className="view-header-actions">
                     <div className="filter-group">
                         <select
                             className="filter-select"
@@ -271,7 +271,6 @@ const PaymentsView = () => {
                     <button
                         className="btn btn-primary"
                         onClick={() => openAddModal()}
-                        style={{ display: 'flex', alignItems: 'center', height: '100%' }}
                     >
                         <Plus size={18} style={{ marginRight: '8px' }} />
                         Record Payment
